@@ -1,0 +1,21 @@
+gnn_dynamics:
+  "energy":
+    constant: {"lr": 9e-4, "ew": 0.05}
+    inv_dist: {"lr": 7e-4, "ew": 0.05}
+    inv_dist2: {"lr": 6e-4, "ew": 0.05}
+    exp_dist: {"lr": 4.5e-4, "ew": 0.05}
+    lj: {"lr": 1.5e-3, "ew": 0.05}
+  "mse": {"lr": 1e-3, "ew": 1.5}
+  "mae": {"lr": 1e-3, "ew": 0.8}
+  "kabsch": {"lr": 8e-4, "ew": 0.8}
+egnn_dynamics:
+  "energy":
+    constant: {"lr": 1.5e-4, "ew": 0.05}
+    inv_dist: {"lr": 1.3e-4, "ew": 0.05}
+    inv_dist2: {"lr": 1.3e-4, "ew": 0.1}
+    exp_dist: {"lr": 1.3e-4, "ew": 0.05}
+    lj: {"lr": 1.6e-4, "ew": 0.05}
+  "mse": {"lr": 3e-4, "ew": 1.0}
+  "mae": {"lr": 3e-4, "ew": 1.0}
+  "kabsch": {"lr": 3e-4, "ew": 0.8}
+

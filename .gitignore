@@ -1,0 +1,16 @@
+MNISTDiffusion/rotated_mnist
+MNISTDiffusion/wandb
+MNISTDiffusion/logs
+MNISTDiffusion/images
+MNISTDiffusion/mnist_data
+e3_diffusion_for_molecules/generated_samples
+e3_diffusion_for_molecules/logs
+e3_diffusion_for_molecules/outputs
+e3_diffusion_for_molecules/wandb
+e3_diffusion_for_molecules/edges_train.pt
+e3_diffusion_for_molecules/sym_edges_train.pt
+e3_diffusion_for_molecules/edges_valid.pt
+e3_diffusion_for_molecules/edges_test.pt
+e3_diffusion_for_molecules/sym_edges_valid.pt
+e3_diffusion_for_molecules/rigidity/k_regular.pt
+shape_generation/k_regular.pickle
