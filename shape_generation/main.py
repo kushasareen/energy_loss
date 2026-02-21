@@ -9,7 +9,7 @@ def main():
 
     set_seed(args.seed)
     if args.wandb:
-        wandb.init(project="hexagons", name= get_wandb_name(args), dir = "/home/mila/k/kusha.sareen/scratch/shape_generation/wandb")
+        wandb.init(project="hexagons", name=get_wandb_name(args))
         wandb.config.update(args)
     dataloaders = get_dataloaders(args)
     denoiser = MLPDenoiser(hidden_dim=args.hidden_dim)

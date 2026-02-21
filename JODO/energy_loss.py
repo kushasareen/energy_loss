@@ -35,7 +35,6 @@ def get_energy_coeffs(data, node_mask, mode='exp'):
         dist = torch.norm(data.unsqueeze(2) - data.unsqueeze(1), dim=-1) # Shape: (B, N, N)
         matrix = k0*torch.exp(-dist)
 
-    # breakpoint() # TODO: Check matrix.mean() and set coeff accordingly
     return torch.einsum('b, bnm -> bnm', const, matrix)
 
 def get_energy_error(data, pred, adj_matrix, k):

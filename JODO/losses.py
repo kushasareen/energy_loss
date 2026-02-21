@@ -88,7 +88,6 @@ def optimization_manager(config):
             for g in optimizer.param_groups:
                 g['lr'] = lr * np.minimum(step / warmup, 1.0)
         if grad_clip >= 0:
-            # torch.nn.utils.clip_grad_norm_(params, max_norm=grad_clip)
             gradient_clipping(params, gradnorm_queue, grad_clip, disable_log)
         optimizer.step()
 
@@ -155,7 +154,6 @@ def get_sde_node_loss_fn(noise_scheduler, train, scaler, config):
         noise = sample_combined_position_feature_noise(xh.shape[0], xh.shape[1], xh.shape[2] - 3, node_mask)
 
         z_t = expand_dims(alpha_t, xh.dim()) * xh + expand_dims(sigma_t, noise.dim()) * noise
-        # assert_mean_zero_with_mask(z_t[:, :, :3], node_mask)
         if noise_align:
             if pred_data:
                 align_pos = get_align_position(z_t, xh)
@@ -285,7 +283,7 @@ def get_sde_2D_loss_fn(noise_scheduler, train, scaler, config):
 
 
 def get_sde_graph_loss_fn(noise_scheduler, train, scaler, config, prop_norm=None):
-    """The loss function for node features, positions and edge features"""
+    """The loss function for node features, positions and edge features."""
 
     device = config.device
     include_charges = config.model.include_fc_charge
@@ -340,7 +338,6 @@ def get_sde_graph_loss_fn(noise_scheduler, train, scaler, config, prop_norm=None
                     cond_x, cond_edge_x = model(t, z_t, node_mask, edge_mask, edge_x=edge_z_t, noise_level=noise_level,
                                                 cond_x=cond_x, cond_edge_x=cond_edge_x, context=context)
                     cond_x, cond_edge_x = cond_x.detach_(), cond_edge_x.detach_()
-                    # post_process self_cond values
                     cond_x, cond_edge_x = cond_process_fn(cond_x, cond_edge_x)
             pred, edge_pred = model(t, z_t, node_mask, edge_mask, edge_x=edge_z_t, noise_level=noise_level,
                                     cond_x=cond_x, cond_edge_x=cond_edge_x, context=context)
@@ -349,18 +346,14 @@ def get_sde_graph_loss_fn(noise_scheduler, train, scaler, config, prop_norm=None
                                     context=context)
 
         if pred_data:
-            # data prediction loss
-                        # data prediction loss
             if use_energy_loss:
-                losses_pos = compute_energy_loss(config, pred[:, :, :3], align_pos, node_mask, edge_mask) # [128, 27, 27]
-                losses_pos = torch.sum(losses_pos, dim=-1) 
-                losses_pos = torch.sum(losses_pos, dim=-1) # sum over nodes and pairs
-                # breakpoint()
+                losses_pos = compute_energy_loss(config, pred[:, :, :3], align_pos, node_mask, edge_mask)  # (B, N, N)
+                losses_pos = torch.sum(losses_pos, dim=-1)
+                losses_pos = torch.sum(losses_pos, dim=-1)  # sum over nodes and pairs
             else:
-                losses_pos = torch.square(pred[:, :, :3] - align_pos) # [128, 27, 3] = [B, N, 3]
-                losses_pos = torch.mean(losses_pos, dim=-1) # average over 3D coords
-                losses_pos = torch.sum(losses_pos, dim=-1) # sum over nodes
-                # breakpoint() # mean 14
+                losses_pos = torch.square(pred[:, :, :3] - align_pos)  # (B, N, 3)
+                losses_pos = torch.mean(losses_pos, dim=-1)  # average over 3D coords
+                losses_pos = torch.sum(losses_pos, dim=-1)  # sum over nodes
 
             atom_type_pred = pred[:, :, 3:]
             atom_type_tar = xh[:, :, 3:]
@@ -387,7 +380,6 @@ def get_sde_graph_loss_fn(noise_scheduler, train, scaler, config, prop_norm=None
             losses_edge = losses_edge / (torch.sum(edge_mask.reshape(losses_edge.shape[0], -1), dim=-1) + 1e-8)
         losses = loss_weights[0] * losses_pos + loss_weights[1] * losses_atom_types + loss_weights[2] * losses_edge
 
-        # scale if predict data
         if pred_data:
             norm = torch.sqrt(alpha_t / sigma_t)
             losses = expand_dims(norm, losses.dim()) * losses
@@ -412,7 +404,7 @@ def get_align_noise(z_t, xh, alpha_t, sigma_t, noise, node_mask):
     return noise
 
 
-@ torch.no_grad()
+@torch.no_grad()
 def get_align_position(z_t, xh):
     pos_t = z_t[:, :, :3]
     pos_0 = xh[:, :, :3]
@@ -471,8 +463,6 @@ def process_batch_2D(batch, device, include_charges, scaler):
     fc_charge = (batch['formal_charges'] if include_charges else torch.zeros(0)).to(device)
     pos = None
 
-    # scaler
-    # pos = remove_mean_with_mask(pos, node_mask)
     _, atom_type, fc_charge, edge_type = scaler(pos, atom_type, fc_charge, node_mask, edge_type, edge_mask)
 
     # pack data
