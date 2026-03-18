@@ -211,15 +211,6 @@ Energy loss yields faster convergence and better stability metrics across all se
 | **Energy** | **89.8 ± 2.8** | **99.3 ± 0.3** | **97.7 ± 1.4** |
 | Energy (sparse) | 89.1 ± 0.9 | 99.0 ± 0.1 | 97.4 ± 2.5 |
 
-**Table: JODO variants on QM9**
-
-| Model | At. Stab. (%) | Mol. Stab. (%) | Val. (%) | Bond↓ | Angle↓ |
-|-------|:-:|:-:|:-:|:-:|:-:|
-| JODO (paper) | 99.2 | 92.8 | 95.6 | 0.1218 | 0.0121 |
-| JODO (ours) | 99.2 | 92.8 | 95.6 | 0.854 | 0.0110 |
-| JODO + Energy (Inv.) | 99.4 | 94.3 | 97.1 | 0.1125 | **0.0046** |
-| **JODO + Energy (Exp.)** | **99.6** | **96.6** | **98.4** | **0.0928** | 0.0142 |
-
 ## Citation
 
 ```bibtex
